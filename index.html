@@ -1,13 +1,356 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>king-lions-eye</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>King Lion's Eye Bible App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #000000;
+      --card: #111111;
+      --accent: #f4c542;
+      --accent-soft: rgba(244, 197, 66, 0.1);
+      --text: #f7f7f7;
+      --muted: #c7c7c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #222 0%, #000 55%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* NAVBAR */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.9),
+        rgba(0, 0, 0, 0.6),
+        transparent
+      );
+      border-bottom: 1px solid rgba(244, 197, 66, 0.15);
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 197, 66, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 0.1rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.15rem;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #ffffff);
+      transition: width 0.18s ease-out;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-tagline {
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      opacity: 0.9;
+    }
+
+    /* LAYOUT */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* HERO / LEFT */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .eyebrow {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 3vw + 1rem, 3rem);
+      line-height: 1.1;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .hero-text {
+      font-size: 0.98rem;
+      color: var(--muted);
+      max-width: 32rem;
+    }
+
+    .hero-verse {
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(
+        120deg,
+        rgba(244, 197, 66, 0.12),
+        rgba(244, 197, 66, 0.02)
+      );
+      border: 1px solid rgba(244, 197, 66, 0.28);
+      font-size: 0.9rem;
+    }
+
+    .hero-verse-ref {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 0.25rem;
+    }
+
+    /* BUTTONS */
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.65rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 197, 66, 0.5);
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ffffff);
+      color: #000;
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    .btn-primary span {
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    /* RIGHT COLUMN – CARDS */
+    .column-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #29220f 0%, #141414 45%, #0b0b0b 100%);
+      border-radius: 1.2rem;
+      padding: 1.2rem 1.3rem;
+      border: 1px solid rgba(244, 197, 66, 0.24);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
+    }
+
+    .card-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      color: #777;
+      border-top: 1px solid rgba(244, 197, 66, 0.15);
+    }
+
+    footer span {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <header>
+    <nav class="nav">
+      <div class="nav-brand">
+        <div class="nav-logo">🦁</div>
+        <div>
+          King Lion's Eye
+          <div class="nav-tagline">Think On These Things</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#verse">Verse of the Day</a>
+        <a href="#about">About</a>
+        <a href="#plan">Reading Plan</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- LEFT / HERO -->
+    <section class="hero">
+      <p class="eyebrow">Scripture • Focus • Peace</p>
+      <h1>
+        Learn the Bible with<br />
+        <span>King Lion's Eye</span> Bible App
+      </h1>
+      <p class="hero-text">
+        A simple, calming way to meditate on Scripture, focus your mind, and fill your day with God’s Word – one
+        verse at a time.
+      </p>
+
+      <div class="hero-verse" id="verse">
+        <div class="hero-verse-ref">Philippians 4:8 (NIV)</div>
+        <p>
+          “Whatever is true, whatever is noble, whatever is right, whatever is pure, whatever is lovely, whatever is
+          admirable—if anything is excellent or praiseworthy—think about such things.”
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#plan" class="btn btn-primary">
+          Start 7-Day Focus Plan <span>➤</span>
+        </a>
+        <a href="#about" class="btn">
+          About the App
+        </a>
+      </div>
+    </section>
+
+    <!-- RIGHT / CARDS -->
+    <section class="column-right">
+      <article class="card" id="about">
+        <div class="card-label">About</div>
+        <div class="card-title">What is King Lion’s Eye Bible App?</div>
+        <p class="card-text">
+          A guided way to stay rooted in Scripture with daily verses, gentle prompts, and uplifting themes that
+          train your mind to “think on these things.”
+        </p>
+      </article>
+
+      <article class="card" id="plan">
+        <div class="card-label">7-Day Focus Plan</div>
+        <div class="card-title">Coming Soon</div>
+        <p class="card-text">
+          You’ll move through a simple journey: Peace, Wisdom, Identity, Gratitude, Faith, Courage, and Hope – with
+          one key verse and reflection each day.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <span>King Lion’s Eye</span> • “Think On These Things” • ©
+    <span id="year"></span>
+  </footer>
+
+  <script>
+    // Set current year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
