@@ -1,4 +1,3 @@
-// src/services/geminiService.ts
 import { GoogleGenAI } from "@google/genai";
 
 const apiKey = import.meta.env.VITE_API_KEY as string | undefined;
@@ -6,11 +5,9 @@ const apiKey = import.meta.env.VITE_API_KEY as string | undefined;
 if (!apiKey) {
   throw new Error("VITE_API_KEY is not set in your .env file");
 }
-
-// Create the Gemini client (official pattern from docs)
 const ai = new GoogleGenAI({ apiKey });
 
-// Gemini model to use
+// Use a widely available Gemini model
 const MODEL_NAME = "gemini-2.0-flash";
 
 export async function askKingLionsEye(prompt: string): Promise<string> {
@@ -19,13 +16,14 @@ export async function askKingLionsEye(prompt: string): Promise<string> {
     contents: prompt,
   });
 
-  // In the new SDK, text is a property, not a function
   const anyResp = response as any;
+
+  // New SDK: text is often a property
   if (typeof anyResp.text === "string") {
     return anyResp.text;
   }
 
-  // Fallback for weird shapes: join parts
+  // Fallback: join candidate parts
   if (anyResp.candidates?.length) {
     return anyResp.candidates
       .map((c: any) =>
@@ -34,6 +32,6 @@ export async function askKingLionsEye(prompt: string): Promise<string> {
       .join("\n\n");
   }
 
-  // Last resort: dump JSON
+  // Last resort: inspect raw JSON
   return JSON.stringify(response, null, 2);
 }
